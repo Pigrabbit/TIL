@@ -53,13 +53,13 @@ Polymorphism의 사전적인 정의는 object가 다양한 형태를 가질 수 
 
 어떤 문제를 묘사할 때, objects, 속성, 연관관계를 자연어를 바탕으로 분석할 수 있다.
 
-| Part of speech | Model Component | Example |
-| ---
-| Proper noun | Instance | Alice |
-| Common noun | Class | Field officer |
-| Doing verb | Operation | cretes, submits, selects |
-| Being verb | Inheritance | Is kind of, Is one of |
-| Adjective, Genetive case | Attributes | Incident description |
+Part of speech | Model Component | Example 
+|:-----: | :-----: | :----- | 
+Proper noun | Instance | Alice 
+Common noun | Class | Field officer 
+Doing verb | Operation | cretes, submits, selects 
+Being verb | Inheritance | Is kind of, Is one of 
+Adjective, Genetive case | Attributes | Incident description 
 
 
 ### What is good design? 
