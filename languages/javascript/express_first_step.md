@@ -1,12 +1,11 @@
 # What is Express?
 
-Express is a powerful but flexible Javascript framework for creating web servers and APIs. 
-It can be used for everything from simple static file servers to JSON APIs to full production servers.
+Express는 웹서버나 API를 개발에 아주 유용한 Javascript framework 이다.
 
-## Starting a server
+# Starting a server
 
-Express is a Node module, so in order to use it, we will need to import it into our program file. 
-To create a server, the imported express function must be invoked.
+Express는 Node 모듈으로 이것을 사용하기 위해서는 파일에서 import 해줘야 한다.
+Server를 만들기 위해서 import된 express function을 invoke해줘야 한다.
 
 ``` javascript
 // Import the express library
@@ -15,9 +14,8 @@ const express = require('express');
 const app = express();
 ```
 
-The purpose of a server is to listen for requests, perform whatever action is required to satisfy the request, and then return a response. 
-In order for our server to start responding, we have to tell the server where to listen for new requests by providing a port number argument to a method called app.listen().
-The server will the listen on the specified port and respond to any requests that come into it.
+기본적으로 server는 port를 바라보고 있으면서 들어오는 request에 대한 response를 돌려준다.
+Server가 이렇게 동작하게 하기위해서 먼저 어떤 port를 listen 해야되는지 `app.listen()`에 argument로 넘겨줘야 한다.
 
 ``` javascript
 const PORT = 80;
@@ -26,59 +24,57 @@ app.listen(PORT, () => {
 });
 ```
 
-On the code above, it will log `Server is listening on port 80` once the server is started.
+위의 Javascript 코드는 `Server is listening on port 80`란 메세지를 콘솔에 출력한다.
 
-## Writing Route
+# Writing Route
 
-To tell our server how to deal with any given request, we register a series of routes. 
-Routes define the control flow for requests based on the request’s path and HTTP verb.
+Server가 request에 따라 어떻게 response를 보낼지 정의하기 위해 route들을 등록해주어야 한다.
+Route에서 request의 path와 HTTP method에 따른 로직을 정의한다.
 
-For example, if your server receives a GET request at ‘/monsters’, we will use a route to define the appropriate functionality for that HTTP verb (GET) and path (/monsters).
+예를들어, server가 '/tea'의 GET request를 받았다고 하자.
+Path('/tea')와 HTTP method(GET)를 이용해 route에서 적절한 로직을 구현하면 된다.
 
-1. GET
-GET requests are used for retrieving resources from a server. 
-Express uses `.get()` to register routes to match GET requests.
-It allows two arguments, a path and a callback function to handle the request and send a response.
+## GET
 
-2. PUT
-PUT requests are used for updating existing resources. 
-We need to include a unique identifier as a route parameter to determine which specific resource to update.
+GET request는 server로 부터 resource를 가져올 때 사용한다.
+Express에서는 `.get()`을 이용해 GET request에 대한 route를 register한다.
+2개의 argument를 pass하는데 첫번째는 path,  두번째는 request를 다루고 response를 보내는 callback function이다.
 
-**Using Queries**
+## PUT
 
-PUT requests need information about how to update the specified data.
-Query strings appear at the end of the path in URLs, and they are indicated with a question mark`?`.
-Query Strings do not count as part of the route path.
-Instead, Express server parses them into an object and attaches it to the request body as `req.query`.
+PUT request는 존재하는 resource를 update할 때 사용한다.
+이를 위해(원하는 target resource를 update하기 위해) unique identifier를 route parameter로 포함시켜야 한다.
 
-3. POST
+PUT request는 존재하는 data를 어떻게(어떤 값으로) update시켜야 하는지에 대한 정보가 필요하다.
+URL의 끝부분을 유심히 살펴보면 '?'뒤로 Query string이 있는 것을 확인할 수 있다.
+이 Query String은 route path로 count되지는 않는다.
+대신에 Express 는 이를 parse해서 object로 만든 뒤 requst body에 `req.query`의 형태로 붙인다.
 
-POST requests are used for creating new resources.
-Since it create new data, their path do not end with a route parameter, but instead end with the type of resources to be created.
-Express uses `.post()` as its method for POST requests. 
-The HTTP status code for a newly-created resource is 201 Created.
+## POST
 
-4. DELETE
+POST request는 새로운 resource를 만들 때 사용된다.
+새로운 data를 생성하는 것이기 때문에, path 끝에 route parameter를 포함하진 않는다.
+그러나 어떤 종류의 resource를 생성했는지 type을 path 끝에 넣는다.
+Express 는 `.post()`를 이용해 POST request를 처리한다.
 
-DELETE requests are used for deleting existing resources.
-Since it delete currently existing data, their paths should usually end with a route parameter to indicate which resource to delete.
-Express uses `.delete()` as its method for DELETE requests.
-Servers often send a 204 No Content status code if deletion occurs without error.
+## DELETE
 
-## Sending a response
+DELETE request는 존재하는 resource를 삭제할 때 사용한다.
+이미 존재하는 data를 삭제하는 것이므로 path에 delete할 target resource에 대한 route parameter를 path 마지막에 넣는다.
 
-HTTP follows a one request-one response cycle. 
-Each client expects exactly one response per request, and each server should only send a single response back to the client per request.
+# Sending a response
 
-Express servers send responses using `.send()` method on the response object.
-It will take any input and include it in the response body.
+HTTP는 기본적으로 하나의 request에 대해 하나의 response를 보낸다.
+Client는 하나의 request에 대해 하나의 response가 올 것이라는 것을 알고 있으며, server는 client에게 하나의 request에 대해서는 하나의 response만을 보내야 한다.
 
-## Setting Status Codes
+Express는 response object의 `.send()`로 response를 보낸다.
+어떤 것도 input으로 받을 수 있고 그것을 response body에 포함시킨다.
 
-Express allows us to set the status code on responses before they are sent. 
-Response codes provide information to clients about how their requests were handled. 
+# Setting Status Codes
 
-`res` object has a `.status()` method to allow us to set the status code.
+Express에서는 res object의 `.status()` method를 통해 http status code를 보낼 수 있다.
+이 response code는 client에게 그들의 request 가 어떻게 처리되었는지 정보를 준다.
+http status code에 대한 정보는 [여기](https://github.com/Pigrabbit/TIL/blob/master/etc/http_status.md)
 
 ```javascript
 const sweetInventory = { Sneakers: 4, Haribo: 1, Kisses: 3, Reese: 2 };
@@ -92,4 +88,4 @@ app.get('/sweet-inventory/:name', (req, res, next) => {
 });
 ```
 
-vim editor에서 한글로 쓰기란...후
+위의 코드에서 `sweetInventory`에 request에서 보낸 element가 있으면 value를 전송하지만 없으면 404코드와 함께 `Sweet not found`라는 에러 메세지를 돌려준다.
