@@ -44,9 +44,43 @@ firstPromiseFunction()
 - `then()`의 success handler 에서 새로운 promise를 return 한다. 이 promise는 `secondPromiseFunction()`을 첫 promise의return value로 호출한 결과다.
 - 그 다음 두 번째 `then()`을 호출해 second promise 의 settlement를 처리한다.
 
+## Common mistakes to avoid
+
+Promise의 가장 큰 장점은 nested 된 callback(일명 callback 지옥)에서 벗어날 수 있다는 점이다.
+그러나, Promise와 handler를 이용하다보면 몇가지 실수를 쉽게 범할 수 있다.
+
+첫번째는 promise들을 chaining하지 않고 nesting 하는 것이다.
+
+```javascript
+returnsFirstPromise()
+ .then((firstResolveVal) => {
+	return returnsSecoundValue(fristResolveVal)
+   	  .then((secondResolveVal) => {
+        console.log(secondResolveVal)
+	  })
+  })
+```
+
+원하는 대로 코드가 작동하기는 하겠지만 지금 2개인 promise가 10개 또는 그 이상이 된다면 상상만해도 그 코드는 머리가 아플 것이다.
+
+두번째는 promise를 return하지 않는 실수이다.
+
+```javascript
+returnsFirstPromise()
+  .then((firstResolveVal) => {
+     returnsSecondValue(firstResolveVal)
+  })
+  .then((someVal) => {
+    console.log(someVal);
+  })
+```
+
+이 때 두 번쨰 `.then()`에서 처리하는 `someVal`은 두 번째 promise의 settled value가 아니라 첫첫 번째(returnsFirstPromise) promise의 settled value이다.
+따라서 에상하던 결과와 다른 값이 콘솔에 출력되는 것을 확인할 수 있다.
+
 ## When you want to getting things done asynchronously
 
-`Promise.all()`을 이용하면 여러 작업들을 async하게 수행할 수 있다.
+`Promise.all()`을 이용하면 서로 독립된 여러 작업들을 async하게 수행할 수 있다.
 promise들의 array를 argument로 받아 하나의 promise를 return 한다.
 결과 promise는 다음 둘 중 하나로 settle하게 된다.
 
